@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Cinema.Helpers
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -21,6 +22,7 @@
                     <li>@Html.ActionLink("Домашняя страница", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Информация", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Связаться", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Login", "Login", "Account", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
             </div>
         </div>
@@ -28,9 +30,8 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - мое приложение ASP.NET</p>
-        </footer>
+        @Html.Footer($"{Convert.ToChar(169)} {DateTime.Now.Year} - My ASP.NET Application", "second layer")
+        @*<footer><p>&copy; @DateTime.Now.Year - мое приложение ASP.NET</p></footer>*@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
