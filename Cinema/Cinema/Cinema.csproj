@@ -122,13 +122,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Binders\LoginBinder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\FooterHelper.cs" />
+    <Compile Include="Interfaces\ITicketsService.cs" />
+    <Compile Include="Models\Domain\Format.cs" />
+    <Compile Include="Models\Domain\Genre.cs" />
+    <Compile Include="Models\Domain\Hall.cs" />
+    <Compile Include="Models\Domain\Movie.cs" />
+    <Compile Include="Models\Domain\TimeSlot.cs" />
+    <Compile Include="Models\FileModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\JsonTicketsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -183,6 +192,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\LoginResult.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Tickets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
