@@ -1,6 +1,14 @@
-﻿@{
+﻿@using Cinema.Models
+
+@{
     ViewBag.Title = "About";
 }
+
+@section SubNav
+{
+    @Html.Partial("SubNavigation", SubNavigationMenu.Movies)
+}
+
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title.</h2>
     <h3>@ViewBag.Message</h3>

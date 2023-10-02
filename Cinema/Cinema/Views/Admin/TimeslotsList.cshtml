@@ -1,0 +1,40 @@
+﻿@using Cinema.Models
+@model Cinema.Models.Domain.TimeSlot[]
+
+@section SubNav
+{
+    @Html.Partial("SubNavigation", SubNavigationMenu.Timeslots)
+}
+
+<h2 class="admin-heading">Timeslots</h2>
+<div class="admin-add-btn">
+    @Html.ActionLink("Add timeslot", "AddTimeslot", "Admin", null, new { @class = "btn btn-success btn-block" })
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Hall</th>
+            <th>Movie</th>
+            <th>Format</th>
+            <th>Start Time</th>
+            <th>Cost</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var timeslot in Model)
+        {
+            <tr>
+                <td>@timeslot.Id</td>
+                <td>@timeslot.HallId</td>
+                <td>@timeslot.MovieId</td>
+                <td>@timeslot.Format</td>
+                <td>@timeslot.StartTime</td>
+                <td>@timeslot.Cost</td>
+                <td>@Html.ActionLink("Edit", "EditTimeslot", "Admin", new { timeslotId = timeslot.Id }, new { @class = "btn btn-primary d-md-block" })</td>
+            </tr>
+        }
+    </tbody>
+</table>

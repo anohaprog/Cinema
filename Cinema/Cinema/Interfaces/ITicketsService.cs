@@ -17,7 +17,13 @@ namespace Cinema.Interfaces
 
         TimeSlot GetTimeSlotById(int Id);
         TimeSlot[] GetAllTimeSlots();
+        TimeSlot[] GetTimeSlotsByMovieId(int movieId);
 
         bool UpdateMovie(Movie updatedMovie);
+        bool UpdateHall(Hall hall);
+        bool UpdateTimeslot(TimeSlot timeSlot);
+
+        bool CreateMovie(Movie newMovie);
+        bool CreateTimeslot(TimeSlot newTimeslot);
     }
 }

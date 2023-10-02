@@ -6,12 +6,12 @@
     var genres = EnumUtil.GetValues<Genre>();
 }
 
-<div>
+<div class="mb-3">
     <label>Genre</label>
-    <select multiple name="Genres" id="Genres">
+    <select multiple name="Genres" id="Genres" class="form-control">
         @foreach (var genre in genres)
         {
-            <option value="@genre" @(Model.Contains(genre) ? "selected" : string.Empty)>
+            <option value="@genre" @(Model != null && Model.Contains(genre) ? "selected" : string.Empty)>
                 @genre
             </option>
         }

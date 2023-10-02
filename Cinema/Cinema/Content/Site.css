@@ -16,5 +16,22 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 500px;
+}
+
+.sub-nav-active{
+    font-weight: bold;
+}
+
+.admin-heading{
+    display: inline-block;
+    max-width: 300px;
+}
+
+.admin-add-btn{
+    display: inline-block;
+    width: 250px;
+    float: right;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
