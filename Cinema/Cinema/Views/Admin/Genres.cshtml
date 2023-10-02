@@ -1,0 +1,19 @@
+﻿@using Cinema.Models.Domain
+@using Cinema.Utils
+@model Cinema.Models.Domain.Genre[]
+
+@{ 
+    var genres = EnumUtil.GetValues<Genre>();
+}
+
+<div>
+    <label>Genre</label>
+    <select multiple name="Genres" id="Genres">
+        @foreach (var genre in genres)
+        {
+            <option value="@genre" @(Model.Contains(genre) ? "selected" : string.Empty)>
+                @genre
+            </option>
+        }
+    </select>
+</div>
