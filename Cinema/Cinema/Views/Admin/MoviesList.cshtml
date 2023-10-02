@@ -1,25 +1,43 @@
-﻿@model Cinema.Models.Domain.Movie[]
+﻿@using Cinema.Models
+@model Cinema.Models.Domain.Movie[]
 
-<table>
-    <tr>
-        <th style="min-width: 30px">Id</th>
-        <th>Poster</th>
-        <th style="min-width: 200px">Name</th>
-        <th style="min-width: 300px">Description</th>
-        <th>Action</th>
-    </tr>
+@section SubNav
+{
+    @Html.Partial("SubNavigation", SubNavigationMenu.Movies)
+}
 
-    @foreach (var movie in Model)
-    {
+<h2 class="admin-heading">Movies</h2>
+<div class="admin-add-btn">
+    @Html.ActionLink("Add movie", "AddMovie", "Admin", null, new {@class="btn btn-success btn-block"})
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead>
         <tr>
-            <td>@movie.Id</td>
-            <td>
-                <img style="max-height: 100px" src="@movie.ImgUrl">
-            </td>
-            <td>@movie.Title</td>
-            <td>@movie.Description</td>
-            <td>@Html.ActionLink("Edit", "EditMovie", "Admin", new { movieId = movie.Id }, null)</td>
+            <th>Id</th>
+            <th>Poster</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Action</th>
         </tr>
-    }
+    </thead>
+    <tbody>
 
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Id</td>
+                <td>
+                    <img style="max-height: 100px" src="@movie.ImgUrl">
+                </td>
+                <td>@movie.Title</td>
+                <td>@movie.Description</td>
+                <td>
+                    @Html.ActionLink("Edit", "EditMovie", "Admin", new { movieId = movie.Id }, new { @class = "btn btn-primary d-md-block" })
+                    @Html.ActionLink("Timeslots", "GetMovieTimeslotsList", "Admin", new { movieId = movie.Id }, new { @class = "btn btn-primary d-md-block" })
+                </td>
+
+            </tr>
+        }
+    </tbody>
 </table>

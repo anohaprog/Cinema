@@ -1,0 +1,9 @@
+﻿@using Cinema.Models
+@model SubNavigationMenu
+
+
+<ul class="dropdown-menu">
+    <li class="@(SubNavigationMenu.Movies == Model ? "active" : string.Empty)">@Html.ActionLink("Movies", "MoviesList", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+    <li class="@(SubNavigationMenu.Halls == Model ? "active" : string.Empty)">@Html.ActionLink("Halls", "HallsList", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+    <li class="@(SubNavigationMenu.Timeslots == Model ? "active" : string.Empty)">@Html.ActionLink("Timeslots", "TimeslotsList", "Admin", new { area = "" }, new { @class = "dropdown-item" })</li>
+</ul>

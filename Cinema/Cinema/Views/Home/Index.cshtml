@@ -1,5 +1,12 @@
-﻿@{
+﻿@using Cinema.Models
+
+@{
     ViewBag.Title = "Home Page";
+}
+
+@section SubNav
+{
+    @Html.Partial("SubNavigation", SubNavigationMenu.Movies)
 }
 
 <main>
