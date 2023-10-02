@@ -1,0 +1,57 @@
+﻿@model Cinema.Models.Domain.Movie
+
+@using (Html.BeginForm("EditMovie", "Admin"))
+{
+    @Html.HiddenFor(x => x.Id)
+    <div>
+        @Html.LabelFor(x => x.Title)
+        @Html.EditorFor(x => x.Title)
+        @Html.ValidationMessageFor(x => x.Title)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.Description)
+        @Html.EditorFor(x => x.Description)
+        @Html.ValidationMessageFor(x => x.Description)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.ImgUrl)
+        @Html.EditorFor(x => x.ImgUrl)
+        @Html.ValidationMessageFor(x => x.ImgUrl)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.Director)
+        @Html.EditorFor(x => x.Director)
+        @Html.ValidationMessageFor(x => x.Director)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.Duration)
+        @Html.EditorFor(x => x.Duration)
+        @Html.ValidationMessageFor(x => x.Duration)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.MinAge)
+        @Html.EditorFor(x => x.MinAge)
+        @Html.ValidationMessageFor(x => x.MinAge)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.ReleaseDate)
+        @Html.EditorFor(x => x.ReleaseDate)
+        @Html.ValidationMessageFor(x => x.ReleaseDate)
+    </div>
+
+    <div>
+        @Html.LabelFor(x => x.Rating)
+        @Html.EditorFor(x => x.Rating)
+        @Html.ValidationMessageFor(x => x.Rating)
+    </div>
+
+    @Html.Partial("Genres", Model.Genres)
+
+    <input type="submit" value="Save changes">
+}

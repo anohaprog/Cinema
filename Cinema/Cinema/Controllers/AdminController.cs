@@ -46,5 +46,34 @@ namespace Cinema.Controllers
             var timeSlotJson = JsonConvert.SerializeObject(timeSlot);
             return Content(timeSlotJson, "application/json");
         }
+
+        public ActionResult MoviesList()
+        {
+            var movies = _ticketsService.GetAllMovies();
+            return View("MoviesList", movies);
+        }
+
+        [HttpGet]
+        public ActionResult EditMovie(int movieId)
+        {
+            var movie = _ticketsService.GetMovieById(movieId);
+            return View("EditMovie", movie);
+        }
+
+        [HttpPost]
+        public ActionResult EditMovie(Movie model)
+        {
+            if (ModelState.IsValid)
+            {
+                var updateResult = _ticketsService.UpdateMovie(model);
+                if (updateResult)
+                {
+                    return RedirectToAction("MoviesList");
+                }
+                return Content("Update failed.");
+            }
+
+            return View("EditMovie", model);
+        }
     }
 }

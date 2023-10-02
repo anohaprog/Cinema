@@ -53,6 +53,37 @@ namespace Cinema.Services
             var fullModel = GetDataFromFile();
             return fullModel.TimeSlots;
         }
+
+        public bool UpdateMovie(Movie updatedMovie)
+        {
+            var fullModel = GetDataFromFile();
+            var movieToUpdate = fullModel.Movies.FirstOrDefault(x => x.Id == updatedMovie.Id);
+
+            if (movieToUpdate == null)
+                return false;
+            
+            movieToUpdate.Title = updatedMovie.Title;
+            movieToUpdate.Director = updatedMovie.Director;
+            movieToUpdate.Duration = updatedMovie.Duration;
+            movieToUpdate.MinAge = updatedMovie.MinAge;
+            movieToUpdate.Rating = updatedMovie.Rating;
+            movieToUpdate.ImgUrl = updatedMovie.ImgUrl;
+            movieToUpdate.ReleaseDate = updatedMovie.ReleaseDate; 
+            if (updatedMovie.Genres != null)
+            {
+                movieToUpdate.Genres = updatedMovie.Genres;
+            }
+
+            SaveToFile(fullModel);
+            return true;
+        }
+        private void SaveToFile(FileModel model)
+        {
+            var jsonFilePath = Context.Server.MapPath(PathToJson);
+            var serializedModel = JsonConvert.SerializeObject(model);
+            System.IO.File.WriteAllText(jsonFilePath, serializedModel);
+        }
+
         private FileModel GetDataFromFile()
         {
             var jsonFilePath = Context.Server.MapPath(PathToJson);

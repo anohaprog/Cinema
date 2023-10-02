@@ -1,0 +1,25 @@
+﻿@model Cinema.Models.Domain.Movie[]
+
+<table>
+    <tr>
+        <th style="min-width: 30px">Id</th>
+        <th>Poster</th>
+        <th style="min-width: 200px">Name</th>
+        <th style="min-width: 300px">Description</th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var movie in Model)
+    {
+        <tr>
+            <td>@movie.Id</td>
+            <td>
+                <img style="max-height: 100px" src="@movie.ImgUrl">
+            </td>
+            <td>@movie.Title</td>
+            <td>@movie.Description</td>
+            <td>@Html.ActionLink("Edit", "EditMovie", "Admin", new { movieId = movie.Id }, null)</td>
+        </tr>
+    }
+
+</table>
