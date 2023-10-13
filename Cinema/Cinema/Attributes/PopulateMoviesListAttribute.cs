@@ -1,4 +1,6 @@
-﻿using Cinema.Services;
+﻿using Cinema.Interfaces;
+using Cinema.Services;
+using LightInject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,11 @@ namespace Cinema.Attributes
 {
     public class PopulateMoviesListAttribute : ActionFilterAttribute
     {
+        [Inject]
+        public ITicketsService TicketsService { get; set; }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var ticketService = new JsonTicketsService(HttpContext.Current);
-            filterContext.Controller.ViewData["MoviesList"] = ticketService.GetAllMovies();
+            filterContext.Controller.ViewData["MoviesList"] = TicketsService.GetAllMovies();
             base.OnActionExecuting(filterContext);
         }
     }

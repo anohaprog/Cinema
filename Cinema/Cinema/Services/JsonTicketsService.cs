@@ -1,6 +1,7 @@
 ﻿using Cinema.Interfaces;
 using Cinema.Models;
 using Cinema.Models.Domain;
+using Cinema.Models.Tickets;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace Cinema.Services
         private const string PathToJson = "/Files/Data.json";
         private HttpContext Context { get; set; }
 
-        public JsonTicketsService(HttpContext context)
+        public JsonTicketsService()
         {
-            Context = context;
+            Context = HttpContext.Current;
         }
 
         public Movie GetMovieById(int Id)
@@ -61,14 +62,14 @@ namespace Cinema.Services
 
             if (movieToUpdate == null)
                 return false;
-            
+
             movieToUpdate.Title = updatedMovie.Title;
             movieToUpdate.Director = updatedMovie.Director;
             movieToUpdate.Duration = updatedMovie.Duration;
             movieToUpdate.MinAge = updatedMovie.MinAge;
             movieToUpdate.Rating = updatedMovie.Rating;
             movieToUpdate.ImgUrl = updatedMovie.ImgUrl;
-            movieToUpdate.ReleaseDate = updatedMovie.ReleaseDate; 
+            movieToUpdate.ReleaseDate = updatedMovie.ReleaseDate;
             if (updatedMovie.Genres != null)
             {
                 movieToUpdate.Genres = updatedMovie.Genres;
@@ -171,5 +172,98 @@ namespace Cinema.Services
 
             return true;
         }
+
+        public bool RemoveMovie(int movieId)
+        {
+            var fullModel = GetDataFromFile();
+            var moviesList = fullModel.Movies.ToList();
+            var movieToDelete = moviesList.FirstOrDefault(x => x.Id == movieId);
+            if (movieToDelete == null)
+                return false;
+
+            var timeslotsToDelete = fullModel.TimeSlots.Where(x => x.MovieId == movieId).ToList();
+            if (timeslotsToDelete.Any())
+            {
+                foreach (var timeslot in timeslotsToDelete)
+                {
+                    RemoveTimeslot(timeslot.Id);
+                }
+            }
+            moviesList.Remove(movieToDelete);
+            fullModel.Movies = moviesList.ToArray();
+            SaveToFile(fullModel);
+
+            return true;
+        }
+        public bool RemoveTimeslot(int timeslotId)
+        {
+            var fullModel = GetDataFromFile();
+            try
+            {
+                var timeslotsList = fullModel.TimeSlots.ToList();
+                var timeslotToDelete = timeslotsList.FirstOrDefault(x => x.Id == timeslotId);
+                timeslotsList.Remove(timeslotToDelete);
+                fullModel.TimeSlots = timeslotsList.ToArray();
+                SaveToFile(fullModel);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool RemoveHall(int hallId)
+        {
+            var fullModel = GetDataFromFile();
+            try
+            {
+                var hallsList = fullModel.Halls.ToList();
+                var hallToDelete = hallsList.FirstOrDefault(x => x.Id == hallId);
+                hallsList.Remove(hallToDelete);
+                fullModel.Halls = hallsList.ToArray();
+                SaveToFile(fullModel);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public MovieListItem[] GetFullMoviesInfo()
+        {
+            var allMovies = GetAllMovies();
+            var resultModel = new List<MovieListItem>();
+            foreach (var movie in allMovies)
+            {
+                resultModel.Add(new MovieListItem
+                {
+                    Movie = movie,
+                    AvailableTimeslots = GetTimeslotTagsByMovieId(movie.Id)
+                });
+            }
+            return resultModel.ToArray();
+        }
+
+        public TimeslotTag[] GetTimeslotTagsByMovieId(int movieId)
+        {
+            var allTimeslots = GetTimeSlotsByMovieId(movieId);
+            var resultModel = new List<TimeslotTag>();
+            foreach (var timeslot in allTimeslots)
+            {
+                resultModel.Add(new TimeslotTag
+                {
+                    TimeslotId = timeslot.Id,
+                    StartTime = timeslot.StartTime,
+                    Cost = timeslot.Cost
+                });
+            }
+
+            return resultModel.ToArray();
+        }
+
     }
 }

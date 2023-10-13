@@ -17,8 +17,14 @@
     </div>
 
     <div class="mb-3">
+
         @Html.LabelFor(x => x.StartTime)
-        @Html.EditorFor(x => x.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="input-group date" id="@Html.IdFor(x=>x.StartTime)">
+            <input type="datetime-local" class="form-control" name="@Html.NameFor(x=>x.StartTime)" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
         @Html.ValidationMessageFor(x => x.StartTime)
     </div>
 
@@ -34,3 +40,8 @@
     <input type="submit" value="Add timeslots" class="btn btn-success">
 }
 
+@section scripts{
+    <script type="text/javascript">
+        $('#@Html.IdFor(x=>x.StartTime)').datetimepicker({ locale: "ru" });
+    </script>
+}
