@@ -3,6 +3,7 @@ using Cinema.Interfaces;
 using Cinema.Models;
 using Cinema.Models.Domain;
 using Cinema.Services;
+using LightInject;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,14 +15,12 @@ namespace Cinema.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly ITicketsService _ticketsService;
-        public AdminController()
-        {
-            _ticketsService = new JsonTicketsService(System.Web.HttpContext.Current);
-        }
+        [Inject]
+        public ITicketsService TicketsService { get; set; }
+
         public ActionResult FindMovieById(int id)
         {
-            var movie = _ticketsService.GetMovieById(id);
+            var movie = TicketsService.GetMovieById(id);
             if (movie == null)
                 return Content("Movie with such ID does not exists", "application/json");
 
@@ -30,7 +29,7 @@ namespace Cinema.Controllers
         }
         public ActionResult FindHallById(int id)
         {
-            var hall = _ticketsService.GetHallById(id);
+            var hall = TicketsService.GetHallById(id);
             if (hall == null)
                 return Content("Hall with such ID does not exists", "application/json");
 
@@ -40,7 +39,7 @@ namespace Cinema.Controllers
 
         public ActionResult FindTimeSlotById(int id)
         {
-            var timeSlot = _ticketsService.GetTimeSlotById(id);
+            var timeSlot = TicketsService.GetTimeSlotById(id);
             if (timeSlot == null)
                 return Content("TimeSlot with such ID does not exists", "application/json");
 
@@ -49,29 +48,43 @@ namespace Cinema.Controllers
         }
         public ActionResult GetMovieTimeslotsList(int movieId)
         {
-            var model = _ticketsService.GetTimeSlotsByMovieId(movieId);
-            return View("TimeslotsList", model);
+            return View("TimeslotsList", ProccessTimeslots(TicketsService.GetTimeSlotsByMovieId(movieId)));
         }
         public ActionResult MoviesList()
         {
-            var movies = _ticketsService.GetAllMovies();
+            var movies = TicketsService.GetAllMovies();
             return View("MoviesList", movies);
         }
         public ActionResult HallsList()
         {
-            var halls = _ticketsService.GetAllHalls();
+            var halls = TicketsService.GetAllHalls();
             return View("HallsList", halls);
         }
+        [HttpGet]
         public ActionResult TimeslotsList()
         {
-            var timeslots = _ticketsService.GetAllTimeSlots();
-            return View("TimeslotsList", timeslots);
+            return View("TimeslotsList", ProccessTimeslots(TicketsService.GetAllTimeSlots()));
+        }
+        private TimeslotGridRow[] ProccessTimeslots(TimeSlot[] timeslots)
+        {
+            var movies = TicketsService.GetAllMovies();
+            var halls = TicketsService.GetAllHalls();
+
+            return timeslots.Select(timeslot => new TimeslotGridRow()
+            {
+                StartTime = timeslot.StartTime,
+                Cost = timeslot.Cost,
+                Format = timeslot.Format,
+                Id = timeslot.Id,
+                Hall = halls.First(x=>x.Id == timeslot.HallId),
+                Movie = movies.First(x => x.Id == timeslot.MovieId)
+            }).ToArray();
         }
 
         [HttpGet]
         public ActionResult EditMovie(int movieId)
         {
-            var movie = _ticketsService.GetMovieById(movieId);
+            var movie = TicketsService.GetMovieById(movieId);
             return View("EditMovie", movie);
         }
 
@@ -80,7 +93,7 @@ namespace Cinema.Controllers
         {
             if (ModelState.IsValid)
             {
-                var updateResult = _ticketsService.UpdateMovie(model);
+                var updateResult = TicketsService.UpdateMovie(model);
                 if (updateResult)
                 {
                     return RedirectToAction("MoviesList");
@@ -94,7 +107,7 @@ namespace Cinema.Controllers
         [HttpGet]
         public ActionResult EditHall(int hallId)
         {
-            var movie = _ticketsService.GetHallById(hallId);
+            var movie = TicketsService.GetHallById(hallId);
             return View("EditHall", movie);
         }
 
@@ -103,7 +116,7 @@ namespace Cinema.Controllers
         {
             if (ModelState.IsValid)
             {
-                var updateResult = _ticketsService.UpdateHall(model);
+                var updateResult = TicketsService.UpdateHall(model);
                 if (updateResult)
                 {
                     return RedirectToAction("HallsList");
@@ -118,7 +131,7 @@ namespace Cinema.Controllers
         [PopulateHallsList,PopulateMoviesList]
         public ActionResult EditTimeslot(int timeslotId)
         {
-            var timeslot = _ticketsService.GetTimeSlotById(timeslotId);
+            var timeslot = TicketsService.GetTimeSlotById(timeslotId);
             return View("EditTimeslot", timeslot);
         }
 
@@ -127,7 +140,7 @@ namespace Cinema.Controllers
         {
             if (ModelState.IsValid)
             {
-                var updateResult = _ticketsService.UpdateTimeslot(model);
+                var updateResult = TicketsService.UpdateTimeslot(model);
                 if (updateResult)
                 {
                     return RedirectToAction("TimeslotsList");
@@ -148,7 +161,7 @@ namespace Cinema.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _ticketsService.CreateMovie(newMovie);
+                var result = TicketsService.CreateMovie(newMovie);
                 if (result) 
                     return RedirectToAction("MoviesList");
 
@@ -168,7 +181,7 @@ namespace Cinema.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _ticketsService.CreateTimeslot(newTimeslot);
+                var result = TicketsService.CreateTimeslot(newTimeslot);
                 if (result)
                     return RedirectToAction("TimeslotsList");
 
@@ -176,6 +189,26 @@ namespace Cinema.Controllers
             }
             return View(newTimeslot);
         }
+        [HttpGet]
+        public ActionResult RemoveMovie()
+        {
+            return RedirectToAction("MoviesList");
+        }
+        [HttpGet]
+        public ActionResult RemoveTimeslot(int timeslotId)
+        {
+            if (TicketsService.RemoveTimeslot(timeslotId))
+                return RedirectToAction("TimeslotsList");
 
+            return Content("Delete failed.");
+        }
+        [HttpGet]
+        public ActionResult RemoveHall(int hallId)
+        {
+            if (TicketsService.RemoveHall(hallId))
+                return RedirectToAction("HallsList");
+
+            return Content("Delete failed.");
+        }
     }
 }

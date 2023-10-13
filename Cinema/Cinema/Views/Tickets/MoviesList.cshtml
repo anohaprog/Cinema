@@ -1,0 +1,57 @@
+﻿@using Cinema.Extensions
+@using Cinema.Models
+@model Cinema.Models.Tickets.MovieListItem[]
+
+@section SubNav
+{
+    @Html.Partial("SubNavigation", SubNavigationMenu.Movies)
+}
+
+@foreach (var movieItem in Model)
+{
+    <div class="movie-list-section">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="movie-list-header">
+                    <div class="name-movies-list fw-bold">@movieItem.Movie.Title</div>
+                    <div class="rating-movies-list">Raiting:@movieItem.Movie.Rating</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div>
+                    <img class="img-fluid img-movies-list" src="@movieItem.Movie.ImgUrl" />
+                </div>
+                <div class="movie-list-footer">
+                    <div class="genres-movies-list">
+                        <div>
+                            @string.Join(", ", movieItem.Movie.Genres)
+                        </div>
+                        <div>
+                            @movieItem.Movie.Duration.ToDuration()
+                        </div>
+                    </div>
+                    <div class="age-movies-list">
+                        @movieItem.Movie.MinAge
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                @foreach (var timeslotTag in movieItem.AvailableTimeslots)
+                {
+                    <div class="timeslot-tag">
+                        @Html.ActionLink(timeslotTag.StartTime.ToShortTimeString(), "GetHallInfo", "Tickets",
+                            new { timeslotId = timeslotTag.TimeslotId }, new { @class = "btn btn-default btn-block" })
+                        <span> @timeslotTag.Cost</span>
+                    </div>
+
+                }
+            </div>
+        </div>
+
+        <div>
+        </div>
+
+    </div>
+}

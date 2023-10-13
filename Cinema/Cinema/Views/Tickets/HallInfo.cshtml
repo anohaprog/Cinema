@@ -1,0 +1,30 @@
+﻿@{ 
+    var rows = 12;
+    var columns = 20;
+}
+
+<h1>Select your seat</h1>
+
+<div class="row js-seat-container">
+    <div class="col-md-10">
+        @for(int i = 1; i <= rows; i++)
+            {
+                <div class="cinema-row">
+                    <div class="cinema-row-label">@i</div>
+                    @for(int j = 1; j <= columns; j++)
+                {
+                    <div class="cinema-seat">
+                        <input type="checkbox" id="check-row@(i)-col@(j)"/>
+                        <label for="check-row@(i)-col@(j)" class="js-seat-selector" data-seat-row="@i" data-seat-col="@j">
+                            @j
+                        </label>
+                    </div>
+                }
+                </div>
+            }
+    </div>
+    <div class="col-md-2">
+        Selected seats :
+        <div class="js-seat-result-container"> </div>
+    </div>
+</div>

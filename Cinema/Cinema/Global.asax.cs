@@ -1,3 +1,6 @@
+using Cinema.Interfaces;
+using Cinema.Services;
+using LightInject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,12 @@ namespace Cinema
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-        }
+
+            var container = new ServiceContainer();
+            container.RegisterControllers();
+            container.EnableAnnotatedConstructorInjection();
+            container.Register<ITicketsService, JsonTicketsService>(new PerRequestLifeTime());
+            container.EnableMvc();
+;        }
     }
 }
